@@ -10,28 +10,15 @@ using std::string;
 
 namespace Botting {
 
-	static INPUT inp;
-	static INPUT* ip = &inp;
+	INPUT inp = {};
+	INPUT* ip = &inp;
 
 	static void presskey(int k) {
-		HKL kbl = GetKeyboardLayout(0);
 		ip->type = INPUT_KEYBOARD;
 		ip->ki.wScan = MapVirtualKey(k, MAPVK_VK_TO_VSC);
 		ip->ki.time = 0;
 		ip->ki.dwExtraInfo = 0;
-		ip->ki.wVk = 0;
-		ip->ki.dwFlags = 0;
-		SendInput(1, ip, sizeof(*ip));
-		ip->ki.dwFlags = KEYEVENTF_KEYUP;
-		SendInput(1, ip, sizeof(*ip));
-	}
-
-	static void presskey(char k) {
 		HKL kbl = GetKeyboardLayout(0);
-		ip->type = INPUT_KEYBOARD;
-		ip->ki.wScan = MapVirtualKey(VkKeyScanExA(k, kbl), MAPVK_VK_TO_VSC);
-		ip->ki.time = 0;
-		ip->ki.dwExtraInfo = 0;
 		ip->ki.wVk = 0;
 		ip->ki.dwFlags = 0;
 		SendInput(1, ip, sizeof(*ip));
@@ -39,13 +26,13 @@ namespace Botting {
 		SendInput(1, ip, sizeof(*ip));
 	}
 
-	 static void presskeys(string s)
+	static void presskeys(string s)
 	{
-		HKL kbl = GetKeyboardLayout(0);
 		ip->type = INPUT_KEYBOARD;
 		ip->ki.wVk = 0;
 		ip->ki.time = 0;
 		ip->ki.dwExtraInfo = 0;
+		HKL kbl = GetKeyboardLayout(0);
 		for (unsigned int i = 0; i < s.length(); ++i)
 		{
 			char c = s[i];
@@ -57,7 +44,7 @@ namespace Botting {
 		}
 	}
 
-	 static void holdkey(int k) {
+	static void holdkey(int k) {
 		ip->type = INPUT_KEYBOARD;
 		ip->ki.wScan = MapVirtualKey(k, MAPVK_VK_TO_VSC);
 		ip->ki.time = 0;
@@ -67,7 +54,7 @@ namespace Botting {
 		SendInput(1, ip, sizeof(*ip));
 	}
 
-	 static void releasekey(int k) {
+	static void releasekey(int k) {
 		ip->type = INPUT_KEYBOARD;
 		ip->ki.wScan = MapVirtualKey(k, MAPVK_VK_TO_VSC);;
 		ip->ki.time = 0;
@@ -77,19 +64,13 @@ namespace Botting {
 		SendInput(1, ip, sizeof(*ip));
 	}
 
-	 static void shift(int k) {
+	static void shift(int k) {
 		holdkey(VK_SHIFT);
 		presskey(k);
 		releasekey(VK_SHIFT);
 	}
 
-	 static void shift(char k) {
-		 holdkey(VK_SHIFT);
-		 presskey(k);
-		 releasekey(VK_SHIFT);
-	 }
-
-	 static void movemouse(int x, int y, bool relative = true) {
+	static void movemouse(int x, int y, bool relative = true) {
 		ip->type = INPUT_MOUSE;
 		ip->mi.mouseData = 0;
 		ip->mi.dx = x;
@@ -104,14 +85,14 @@ namespace Botting {
 		}
 	}
 
-	 static void movemwheel(int clicks) {
+	static void movemwheel(int clicks) {
 		ip->type = INPUT_MOUSE;
 		ip->mi.dwFlags = MOUSEEVENTF_WHEEL;
 		ip->mi.mouseData = clicks * 120;
 		SendInput(1, ip, sizeof(*ip));
 	}
 
-	 static void clickmouse(int button) { //Use the macros CLICK_LEFT, CLICK_RIGHT, and CLICK_MIDDLE
+	static void clickmouse(int button) { //Use the macros CLICK_LEFT, CLICK_RIGHT, and CLICK_MIDDLE
 		ip->mi.mouseData = 0;
 		ip->type = INPUT_MOUSE;
 		switch (button) {
@@ -136,17 +117,17 @@ namespace Botting {
 		}
 	}
 
-	 static void holdclick(int button) { //Use the macros CLICK_LEFT, CLICK_RIGHT, and CLICK_MIDDLE
+	static void holdclick(int button) { //Use the macros CLICK_LEFT, CLICK_RIGHT, and CLICK_MIDDLE
 		ip->mi.mouseData = 0;
 		ip->type = INPUT_MOUSE;
 		ip->mi.dwFlags = button;
 		SendInput(1, ip, sizeof(*ip));
 	}
 
-	 static void releaseclick(int button) { //Use the macros CLICK_LEFT, CLICK_RIGHT, and CLICK_MIDDLE
+	static void releaseclick(int button) { //Use the macros CLICK_LEFT, CLICK_RIGHT, and CLICK_MIDDLE
 		ip->mi.mouseData = 0;
 		ip->type = INPUT_MOUSE;
 		ip->mi.dwFlags = 0x0040;
 		SendInput(1, ip, sizeof(*ip));
 	}
-};
+}
